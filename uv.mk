@@ -1,7 +1,7 @@
 TOPDIR?= $(shell pwd)
 
 uv_TOPDIR=$(TOPDIR)/libuv
-uv_LIBA=$(uv_TOPDIR)/libuv.a
+uv_LIBA=$(uv_TOPDIR)/out/Debug/libuv.a
 
 uv_INCLUDES = -I$(uv_TOPDIR)/include -I$(uv_TOPDIR)/src
 
@@ -22,13 +22,12 @@ ifeq (Linux, $(uname_S))
 	uv_LIBS += -lrt -ldl -lm -pthread
 endif
 
-$(uv_TOPDIR):
-	git clone https://github.com/joyent/libuv.git
-
 $(uv_LIBA): $(uv_TOPDIR)
 	cd $(uv_TOPDIR) &&                                                                                              \
 	test -d ./build/gyp || (mkdir -p ./build && git clone https://git.chromium.org/external/gyp.git ./build/gyp) && \
 	./gyp_uv.py -f make &&                                                                                          \
-	cd $(uv_TOPDIR) && $(MAKE) -j 8
+	cd $(uv_TOPDIR)/out && $(MAKE) -j 8
 
-uv_la_HEADERS=include/uv.h include/uv-errno.h include/uv-threadpool.h include/uv-version.h
+$(uv_TOPDIR):
+	git clone https://github.com/joyent/libuv.git
+
