@@ -1,5 +1,3 @@
-TOPDIR?= $(shell pwd)
-
 uv_TOPDIR=$(TOPDIR)/libuv
 uv_LIBA=$(uv_TOPDIR)/out/Debug/libuv.a
 

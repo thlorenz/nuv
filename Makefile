@@ -1,6 +1,8 @@
+TOPDIR?= $(shell pwd)
+
 include uv.mk
 
-INCLUDES=
+INCLUDES=-I$(TOPDIR)
 LDFLAGS=
 CFLAGS=-g -O2 -Wall
 LIBS=
