@@ -1,0 +1,45 @@
+cmake_minimum_required (VERSION 2.6)
+project (nuv)
+
+# libuv
+set(uv_TOPDIR "${PROJECT_SOURCE_DIR}/libuv")
+set(uv_LIBA "${uv_TOPDIR}/out/Debug/libuv.a")
+
+if (NOT EXISTS ${uv_LIBA}) 
+  message("Building libuv.a")
+  execute_process(
+    COMMAND make -C ${PROJECT_SOURCE_DIR} ${uv_LIBA} -j 10 
+  )
+endif()
+
+if (APPLE)
+  set(uv_CFLAGS "${uv_CFLAGS} -D_DARWIN_USE_64_BIT_INODE=1")
+  set(uv_CFLAGS "${uv_CFLAGS} -framework CoreServices")
+  set(uv_LDFLAGS "${uv_LDFLAGS} -framework Foundation")
+  set(uv_LDFLAGS "${uv_LDFLAGS} -framework CoreFoundation")
+  set(uv_LDFLAGS "${uv_LDFLAGS} -framework ApplicationServices")
+elseif (UNIX)
+  set(uv_LDFLAGS "${uv_LDFLAGS} -lrt -ldl -lm -pthread")
+endif(APPLE)
+
+include_directories("${uv_TOPDIR}/include")
+include_directories("${uv_TOPDIR}/src")
+
+# nuv
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${uv_CFLAGS} -g -O2 -Wall")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${uv_LDFLAGS}")
+set(EXAMPLES_SOURCE_DIR "${PROJECT_SOURCE_DIR}/examples")
+set(EXAMPLES_BINARY_DIR "${PROJECT_BINARY_DIR}/examples")
+
+include_directories("${PROJECT_BINARY_DIR}")
+include_directories("${PROJECT_SOURCE_DIR}")
+
+## examples
+
+file(GLOB examples "${EXAMPLES_SOURCE_DIR}/*.c")
+foreach(example ${examples})
+  get_filename_component(execname ${example} NAME_WE)
+  add_executable(${execname} ${example})
+  target_link_libraries(${execname} "${uv_LIBA}")
+  set_target_properties(${execname} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${EXAMPLES_BINARY_DIR})
+endforeach()
