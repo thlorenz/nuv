@@ -1,4 +1,4 @@
-nauv
+nuv
 ====
 
 Native Abstractions for libuv.
