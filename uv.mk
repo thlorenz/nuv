@@ -25,7 +25,6 @@ uv_INCLUDES = -I$(uv_TOPDIR)/include -I$(uv_TOPDIR)/src
 
 uv_CFLAGS = 
 uv_LDFLAGS=
-uv_LIBS=
 
 uname_S=$(shell uname -s)
 ifeq (Darwin, $(uname_S))
@@ -37,6 +36,6 @@ uv_LDFLAGS+=-framework Foundation   \
 endif
 
 ifeq (Linux, $(uname_S))
-	uv_LIBS += -lrt -ldl -lm -pthread
+	uv_LDFLAGS += -lrt -ldl -lm -pthread
 endif
 
