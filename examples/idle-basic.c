@@ -4,7 +4,7 @@
 
 NUV_IDLE_CB(idle_cb) {
   static int64_t count = -1;
-  if (NUV_IDLE_CB_STATUS) fprintf(stderr, "Error, status is %d", NUV_IDLE_CB_STATUS);
+  if (NUV_IDLE_STATUS) fprintf(stderr, "Error, status is %d", NUV_IDLE_STATUS);
   count++;
   if ((count % 10000) == 0) fprintf(stderr, ".");
   if (count >= 10e6) uv_idle_stop(handle);

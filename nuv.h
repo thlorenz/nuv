@@ -16,16 +16,15 @@
 #if UV_VERSION_AT_LEAST(0, 11, 27)
 
 #define _NUV_IDLE_CB_ARGS uv_idle_t* handle
-#define NUV_IDLE_CB_STATUS 0
-#define NUV_IDLE_CB(name) void name(_NUV_IDLE_CB_ARGS)
+#define NUV_IDLE_STATUS 0
 
 #elif UV_VERSION_AT_LEAST(0, 10, 28)
 
 #define _NUV_IDLE_CB_ARGS uv_idle_t* handle, int status
-#define NUV_IDLE_CB_STATUS status
-#define NUV_IDLE_CB(name) void name(_NUV_IDLE_CB_ARGS)
+#define NUV_IDLE_STATUS status
 
 #endif /* UV_VERSION_AT_LEAST(0, 11, 0) */
 
+#define NUV_IDLE_CB(name) void name(_NUV_IDLE_CB_ARGS)
 
 #endif /* __NUV__ */
