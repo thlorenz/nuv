@@ -18,9 +18,6 @@ examples/%: $(uv_LIBA)
 clean:
 		find . -name "*.gc*" -exec rm {} \;
 		rm -rf `find . -name "*.dSYM" -print`
-		rm -f `find libuv -name *.o` 
-		rm -f `find libuv -name libuv.a` 
 		rm -f examples/idle-basic
-		$(MAKE) -C $(uv_TOPDIR)/out $@
 
 .PHONY: clean 
