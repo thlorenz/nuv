@@ -1,8 +1,27 @@
 uv_TOPDIR=$(TOPDIR)/libuv
 uv_LIBA=$(uv_TOPDIR)/out/Debug/libuv.a
-
-uv_INCLUDES = -I$(uv_TOPDIR)/include -I$(uv_TOPDIR)/src -I/$(uv_TOPDIR)/src/version.c
 uv_VERSION_HEADER=$(uv_TOPDIR)/include/uv-version.h
+
+$(uv_LIBA): $(uv_TOPDIR)
+	cd $(uv_TOPDIR) &&                                                                                              \
+	test -d ./build/gyp || (mkdir -p ./build && git clone https://git.chromium.org/external/gyp.git ./build/gyp) && \
+	./gyp_uv.py -f make &&                                                                                          \
+	cd $(uv_TOPDIR)/out && $(MAKE) -j 8 
+	# uv v0.10.x doesn't include patch version in a header file, so we need to fix that
+	test -f $(uv_VERSION_HEADER) || cat libuv/src/version.c | grep '#define UV_VERSION_PATCH' >> $(uv_VERSION_HEADER)
+
+uv_v10:
+	rm -f $(uv_LIBA)
+	cd $(uv_TOPDIR) && git reset HEAD --hard --quiet  && git checkout v0.10.28 --force
+
+uv_master:
+	rm -f $(uv_LIBA)
+	cd $(uv_TOPDIR) && git reset HEAD --hard --quiet  && git checkout master --force
+
+$(uv_TOPDIR):
+	git clone https://github.com/joyent/libuv.git
+
+uv_INCLUDES = -I$(uv_TOPDIR)/include -I$(uv_TOPDIR)/src
 
 uv_CFLAGS = 
 uv_LDFLAGS=
@@ -21,19 +40,3 @@ ifeq (Linux, $(uname_S))
 	uv_LIBS += -lrt -ldl -lm -pthread
 endif
 
-$(uv_LIBA): $(uv_TOPDIR)
-	cd $(uv_TOPDIR) &&                                                                                              \
-	test -d ./build/gyp || (mkdir -p ./build && git clone https://git.chromium.org/external/gyp.git ./build/gyp) && \
-	./gyp_uv.py -f make &&                                                                                          \
-	cd $(uv_TOPDIR)/out && $(MAKE) -j 8 
-	# uv v0.10.x doesn't include patch version in a header file, so we need to fix that
-	test -f $(uv_VERSION_HEADER) || cat libuv/src/version.c | grep '#define UV_VERSION_PATCH' >> $(uv_VERSION_HEADER)
-
-uv_v10:
-	cd $(uv_TOPDIR) && git reset HEAD --hard --quiet  && git checkout v0.10.28 --force
-
-uv_master:
-	cd $(uv_TOPDIR) && git reset HEAD --hard --quiet  && git checkout master --force
-
-$(uv_TOPDIR):
-	git clone https://github.com/joyent/libuv.git
