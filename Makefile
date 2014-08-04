@@ -20,4 +20,8 @@ clean:
 		rm -rf `find . -name "*.dSYM" -print`
 		rm -f examples/idle-basic
 
-.PHONY: clean 
+help:
+	@echo UV_VERSION $($UV_VERSION)
+	@echo uv_LIBA $(uv_LIBA)
+
+.PHONY: clean  help

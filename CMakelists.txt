@@ -2,11 +2,16 @@ cmake_minimum_required (VERSION 2.6)
 project (nuv)
 
 # libuv
-set(uv_TOPDIR "${PROJECT_SOURCE_DIR}/libuv")
+
+# allow overriding libuv dir that's used to quickly switch versions
+# during development
+set(uv_VERSION $ENV{UV_VERSION})
+
+set(uv_TOPDIR "${PROJECT_SOURCE_DIR}/libuv${uv_VERSION}")
 set(uv_LIBA "${uv_TOPDIR}/out/Debug/libuv.a")
 
 if (NOT EXISTS ${uv_LIBA}) 
-  message("Building libuv.a")
+  message("Building ${uv_LIBA}")
   execute_process(
     COMMAND make -C ${PROJECT_SOURCE_DIR} ${uv_LIBA} -j 10 
   )

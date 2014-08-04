@@ -22,6 +22,6 @@
 *.x86_64
 *.hex
 
-libuv
-build/
-xcode
+libuv*/
+build*/
+xcode*/
