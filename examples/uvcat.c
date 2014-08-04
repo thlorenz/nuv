@@ -33,29 +33,33 @@ void open_cb(uv_fs_t* req) {
   uv_file fd = req->result;
 
   fprintf(stderr, "file: %d\n", fd);
-//  uv_fs_read(uv_default_loop(), &read_req, fd, buffer, sizeof(buffer), -1 /*offset*/, read_cb);
 
- // uv_fs_req_cleanup(req);
-  //assert(req->path == NULL);
+  memset(buffer, 0, sizeof(buffer));
+  uv_buf_t iov = uv_buf_init(buffer, sizeof(buffer));
+  NUV_fs_read(uv_default_loop(), &read_req, fd, &iov, 1, -1 /*offset*/, read_cb);
+
+  uv_fs_req_cleanup(req);
+  assert(req->path == NULL);
   uv_fs_close(uv_default_loop(), &close_req, open_req.result, close_cb);
 }
 
-/*void read_cb(uv_fs_t *req) {
+void read_cb(uv_fs_t *req) {
   assert(req == &read_req);
   assert(req->fs_type == UV_FS_READ);
-  if (req->result < 0) ERROR("aync read error", req->result);
+  //if (req->result < 0) ERROR("aync read error", req->result);
 
   uv_fs_req_cleanup(req);
 
   if (req->result == 0) {
     uv_fs_close(uv_default_loop(), &close_req, open_req.result, close_cb);
   } else {
-    uv_fs_write(uv_default_loop(), &write_req, STDOUT, buffer, req->result, -1 [>offset<], write_cb);
+    //uv_fs_write(uv_default_loop(), &write_req, STDOUT, buffer, req->result, -1 /*offset*/, write_cb);
   }
 
   fprintf(stderr, "%ld bytes read\n", req->result);
 }
 
+/*
 void write_cb(uv_fs_t *req) {
   assert(req == &write_req);
   assert(req->fs_type == UV_FS_WRITE);
