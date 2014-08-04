@@ -3,8 +3,7 @@ project (nuv)
 
 # libuv
 
-# allow overriding libuv dir that's used to quickly switch versions
-# during development
+# allow overriding libuv dir in order to rebuild Xcode projects for multiple versions 
 set(uv_VERSION $ENV{UV_VERSION})
 
 set(uv_TOPDIR "${PROJECT_SOURCE_DIR}/libuv${uv_VERSION}")

@@ -1,5 +1,4 @@
-# allow overriding libuv dir that's used to quickly switch versions
-# during development
+# allow overriding libuv dir in order to rebuild Xcode projects for multiple versions 
 uv_TOPDIR=$(TOPDIR)/libuv$($UV_VERSION)
 uv_LIBA=$(uv_TOPDIR)/out/Debug/libuv.a
 uv_VERSION_HEADER=$(uv_TOPDIR)/include/uv-version.h
